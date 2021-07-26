@@ -1,16 +1,23 @@
 const express = require("express");
 const path = require("path");
 const db = require("./config/connection");
-const {
-  ApolloServer,
-} = require("./schemas/node_modules/apollo-server-express");
+const { ApolloServer } = require("apollo-server-express");
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
 //const routes = require('./routes');
-const routes = require("./routes");
+// const routes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Create a new instance of an Apollo server with the GraphQL schema
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: authMiddleware,
+});
+
+// Update Express.js to use Apollo server features
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
